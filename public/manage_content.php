@@ -6,9 +6,16 @@
 <?php include("../includes/layouts/sidebar.php");  ?>
 
         <div class="col-sm-9 main">
-          <h1 class="page-header">Manage Content</h1>
-          <?php echo $selected_subject_id; ?><br>
-          <?php echo $selected_page_id; ?>
+          <?php if ($current_subject) { ?>
+            <h1 class="page-header">Manage Content</h1>
+
+            <p>Menu name: <?php echo $current_subject["menu_name"]; ?></p>
+          <?php } elseif ($current_page) { ?>
+            <h1 class="page-header">Manage Page</h1>
+            <p>Menu name: <?php echo $current_page["menu_name"]; ?></p>
+          <?php } else {  ?>
+            <p>Please select a subject or page.</p>
+          <?php } ?>
         </div>
       </div>
     </div>

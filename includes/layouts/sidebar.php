@@ -1,15 +1,4 @@
-<?php
-  if (isset($_GET["subject"])) {
-    $selected_subject_id = $_GET["subject"];
-    $selected_page_id = null;
-  } elseif (isset($_GET["page"])) {
-    $selected_page_id = $_GET["page"];
-    $selected_subject_id = null;
-  } else {
-    $selected_page_id = null;
-    $selected_subject_id = null;
-  }
-?>
+<?php find_selected_page(); ?>
 
 <div class="col-sm-3">
   <ul class="subjects">
