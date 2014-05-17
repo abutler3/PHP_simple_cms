@@ -12,7 +12,7 @@
           }
           echo ">";
     ?>
-        <a href="manage_content.php?subject=<?php echo urlencode($subject["id"]); ?>"><?php echo $subject["menu_name"]; ?></a>
+        <a href="manage_content.php?subject=<?php echo urlencode($subject["id"]); ?>"><?php echo htmlentities($subject["menu_name"]); ?></a>
         <?php $page_set = find_pages_for_subject($subject["id"]); ?>
         <ul class="pages">
           <?php
@@ -24,16 +24,19 @@
                     }
                     echo ">";
               ?>
-              <a href="manage_content.php?page=<?php echo urlencode($page["id"]); ?>"><?php echo $page["menu_name"]; ?></a></li>
+              <a href="manage_content.php?page=<?php echo urlencode($page["id"]); ?>"><?php echo htmlentities($page["menu_name"]); ?></a></li>
             <?php
               }
             ?>
             <?php mysqli_free_result($page_set); ?>
         </ul>
       </li>
+
     <?php
       }
     ?>
     <?php mysqli_free_result($subject_set); ?>
+    <a href="new_subject.php">+ Add a subject</a>
+
   </ul>
 </div>
