@@ -1,5 +1,6 @@
 <?php
 function redirect_to($new_location) {
+  ob_start( );
   header("Location:" . $new_location);
   exit;
 }
