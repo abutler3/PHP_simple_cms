@@ -2,7 +2,7 @@
 
 <div class="col-sm-3">
   <ul class="subjects">
-    <?php $subject_set = find_all_subjects(); ?>
+    <?php $subject_set = find_all_subjects(false); ?>
     <?php
       while ($subject = mysqli_fetch_assoc($subject_set)) {
     ?>
@@ -13,7 +13,7 @@
           echo ">";
     ?>
         <a href="manage_content.php?subject=<?php echo urlencode($subject["id"]); ?>"><?php echo htmlentities($subject["menu_name"]); ?></a>
-        <?php $page_set = find_pages_for_subject($subject["id"]); ?>
+        <?php $page_set = find_pages_for_subject($subject["id"], false); ?>
         <ul class="pages">
           <?php
             while ($page = mysqli_fetch_assoc($page_set)) {

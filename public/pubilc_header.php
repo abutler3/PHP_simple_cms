@@ -1,13 +1,10 @@
-<?php if(!isset($layout_context)) {
-  $layout_context = "public";
-}?>
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>W Corp <?php if($layout_context == "admin") { echo "Admin"; } ?></title>
+    <title>Bootstrap 101 Template</title>
 
     <!-- Bootstrap -->
     <link href="stylesheets/bootstrap.min.css" rel="stylesheet">
@@ -29,11 +26,12 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="../public/admin.php">W Corp <?php if($layout_context == "admin") { echo "Admin"; } ?></a>
+          <a class="navbar-brand" href="../public/index.php">W Corp</a>
         </div>
         <div class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
-            <li><a href="admin.php">Admin</a></li>
+<!--             <li><a href="manage_content.php">Manage Website Content</a></li>
+            <li><a href="manage_admins.php">Manage Admin Users</a></li> -->
             <li><a href="logout.php">Logout</a></li>
           </ul>
         </div>

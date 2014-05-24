@@ -1,27 +1,22 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Bootstrap 101 Template</title>
+<?php require_once("../includes/session.php"); ?>
+<?php require_once("../includes/functions.php");  ?>
+<?php require_once("../includes/db_connection.php");  ?>
+<?php $layout_context = "public" ?>
+<?php include("../includes/layouts/header.php");  ?>
+<?php include("public_sidebar.php");  ?>
 
-    <!-- Bootstrap -->
-    <link href="stylesheets/bootstrap.min.css" rel="stylesheet">
 
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
-  </head>
-  <body>
-    <h1>Hello, world!</h1>
-
-    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-    <!-- Include all compiled plugins (below), or include individual files as needed -->
-    <script src="javascripts/bootstrap.min.js"></script>
-  </body>
-</html>
+        <div class="col-sm-9 main">
+          <?php if ($current_page) { ?>
+            <h2><?php echo htmlentities($current_page["menu_name"]); ?>
+</h2>
+            <?php echo nl2br(htmlentities($current_page["content"])); ?>
+          <?php } else {  ?>
+            <p>Welcome!</p>
+          <?php } ?>
+        </div>
+      </div>
+    </div>
+    <?php mysqli_close($conn); ?>
+<?php include("../includes/layouts/footer.php");  ?>
+<?

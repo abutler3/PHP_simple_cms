@@ -33,11 +33,13 @@ function redirect_to($new_location) {
   }
 
 
-  function find_all_subjects() {
+  function find_all_subjects($public=true) {
     global $conn;
     $query  = "SELECT * ";
     $query .= "FROM subjects ";
-    $query .= "WHERE visible = 1 ";
+    if ($public) {
+      $query .= "WHERE visible = 1 ";
+    }
     $query .= "ORDER BY position ASC";
     $subject_set = mysqli_query($conn, $query);
     confirm_query($subject_set);
@@ -45,14 +47,16 @@ function redirect_to($new_location) {
     return $subject_set;
   }
 
-  function find_pages_for_subject($subject_id) {
+  function find_pages_for_subject($subject_id, $public=true) {
     global $conn;
     $safe_subject_id = mysqli_real_escape_string($conn, $subject_id);
 
     $query  = "SELECT * ";
     $query .= "FROM pages ";
-    $query .= "WHERE visible = 1 ";
-    $query .= "AND subject_id = {$safe_subject_id} ";
+    $query .= "WHERE subject_id = {$safe_subject_id} ";
+    if ($public) {
+      $query .= "AND visible = 1 ";
+    }
     $query .= "ORDER BY position ASC";
     $page_set = mysqli_query($conn, $query);
     confirm_query($page_set);
@@ -60,12 +64,15 @@ function redirect_to($new_location) {
     return $page_set;
   }
 
-  function find_subject_by_id($subject_id) {
+  function find_subject_by_id($subject_id, $public=true) {
     global $conn;
     $safe_subject_id = mysqli_real_escape_string($conn, $subject_id);
     $query  = "SELECT * ";
     $query .= "FROM subjects ";
     $query .= "WHERE id = {$safe_subject_id} ";
+    if ($public) {
+      $query .= "AND VISIBLE = 1 ";
+    }
     $query .= "LIMIT 1";
     $subject_set = mysqli_query($conn, $query);
     confirm_query($subject_set);
@@ -77,12 +84,15 @@ function redirect_to($new_location) {
     // confirm_query is in the functions.php file
   }
 
-  function find_page_by_id($page_id) {
+  function find_page_by_id($page_id, $public=true) {
     global $conn;
     $safe_page_id = mysqli_real_escape_string($conn, $page_id);
     $query  = "SELECT * ";
     $query .= "FROM pages ";
     $query .= "WHERE id = {$safe_page_id} ";
+    if ($public) {
+      $query .= "AND VISIBLE = 1 ";
+    }
     $query .= "LIMIT 1";
     $page_set = mysqli_query($conn, $query);
     confirm_query($page_set);
@@ -94,7 +104,16 @@ function redirect_to($new_location) {
     // confirm_query is in the functions.php file
   }
 
-  function find_selected_page() {
+  function find_default_page_for_subject($subject_id) {
+    $page_set = find_pages_for_subject($subject_id);
+    if ($first_page = mysqli_fetch_assoc($page_set)) {
+      return $first_page;
+    } else {
+      return null;
+    }
+  }
+
+  function find_selected_page($public=false) {
     global $selected_subject_id;
     global $current_subject;
     global $selected_page_id;
@@ -102,12 +121,16 @@ function redirect_to($new_location) {
 
     if (isset($_GET["subject"])) {
       $selected_subject_id = $_GET["subject"];
-      $current_subject = find_subject_by_id($selected_subject_id);
+      $current_subject = find_subject_by_id($selected_subject_id, $public);
+      if ($current_subject && $public) {
+        $current_page = find_default_page_for_subject($current_subject["id"]);
+      } else {
+        $current_page = null;
+      }
       $selected_page_id = null;
-      $current_page = null;
     } elseif (isset($_GET["page"])) {
       $selected_page_id = $_GET["page"];
-      $current_page = find_page_by_id($selected_page_id);
+      $current_page = find_page_by_id($selected_page_id, $public);
       $selected_subject_id = null;
       $current_subject = null;
     } else {
