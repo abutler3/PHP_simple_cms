@@ -140,3 +140,32 @@ function redirect_to($new_location) {
       $current_subject = null;
     }
   }
+
+  function find_all_admins() {
+    global $conn;
+    $query  = "SELECT * ";
+    $query .= "FROM admins ";
+    $query .= "ORDER BY username ASC";
+    $admin_set = mysqli_query($conn, $query);
+    confirm_query($admin_set);
+    // confirm_query is in the functions.php file
+    return $admin_set;
+
+  }
+
+  function find_admin_by_id($admin_id) {
+    global $conn;
+    $safe_admin_id = mysqli_real_escape_string($conn, $admin_id);
+    $query  = "SELECT * ";
+    $query .= "FROM admins ";
+    $query .= "WHERE id = {$safe_admin_id} ";
+    $query .= "LIMIT 1";
+    $admin_set = mysqli_query($conn, $query);
+    confirm_query($admin_set);
+    if ($admin = mysqli_fetch_assoc($admin_set)) {
+      return $admin;
+    } else {
+      return null;
+    }
+    // confirm_query is in the functions.php file
+  }
