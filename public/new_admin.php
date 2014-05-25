@@ -19,7 +19,7 @@
 
               // Perform create
               $username = mysql_prep($_POST["username"]);
-              $hashed_password = mysql_prep($_POST["password"]);
+              $hashed_password = password_encrypt($_POST["password"]);
 
               // 2. Perform database query
               $query  = "INSERT INTO admins (";

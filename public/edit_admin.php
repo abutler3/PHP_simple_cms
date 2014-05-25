@@ -25,7 +25,7 @@
               // Perform create
               $id = $admin["id"];
               $username = mysql_prep($_POST["username"]);
-              $hashed_password = mysql_prep($_POST["password"]);
+              $hashed_password = password_encrypt($_POST["password"]);
 
               // 2. Perform database query
               $query  = "UPDATE admins SET ";
@@ -38,7 +38,6 @@
               if ($result && mysqli_affected_rows($conn) == 1) {
                 // Success
                 $_SESSION["message"] = "Admin updated.";
-                redirect_to("manage_content.php");
               } else {
                 $_SESSION["message"] = "Admin update failed.";
                 // die("Database query failed. " . mysqli_error($connection));
@@ -66,7 +65,7 @@
             </form>
           </div>
           <br>
-          <a href="manage_admins.php">Cancel</a>
+          <a href="manage_admins.php">Back</a>
         </div>
       </div>
     </div>
