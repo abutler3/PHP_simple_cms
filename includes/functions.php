@@ -1,3 +1,4 @@
+<?php ob_start();?>
 <?php
 function redirect_to($new_location) {
   ob_start( );
@@ -24,7 +25,7 @@ function redirect_to($new_location) {
       $output .= "Please fix the following errors:";
       $output .= "<ul>";
       foreach ($errors as $key => $error) {
-        $output .= "<li> htmlentities($error); </li>";
+        $output .= "<li> $error; </li>";
       }
       $output .= "</ul>";
       $output .= "</div>";
@@ -170,6 +171,22 @@ function redirect_to($new_location) {
     // confirm_query is in the functions.php file
   }
 
+  function find_admin_by_username($username) {
+    global $conn;
+    $safe_username = mysqli_real_escape_string($conn, $username);
+    $query  = "SELECT * ";
+    $query .= "FROM admins ";
+    $query .= "WHERE username = '{$safe_username}' ";
+    $query .= "LIMIT 1";
+    $admin_set = mysqli_query($conn, $query);
+    confirm_query($admin_set);
+    if ($admin = mysqli_fetch_assoc($admin_set)) {
+      return $admin;
+    } else {
+      return null;
+    }
+    // confirm_query is in the functions.php file
+  }
   function password_encrypt($password) {
     $hash_format = "$2y$10$";
     $salt_length = 22;
@@ -198,4 +215,33 @@ function redirect_to($new_location) {
     } else {
       return false;
     }
+  }
+
+  function attempt_login($username, $password) {
+    // Look up user
+    $admin = find_admin_by_username($username);
+    if ($admin) {
+      // Found admin, now check password
+      if (password_check($password, $admin["hashed_password"])) {
+        // password matches
+        return $admin;
+      } else {
+        // password does not match
+        return false;
+      }
+    } else {
+      // admin not found
+      return false;
+    }
+
+  }
+
+  function logged_in() {
+    return isset($_SESSION['admin_id']);
+  }
+
+  function confirm_logged_in() {
+      if (!logged_in()) {
+          redirect_to("login.php");
+      }
   }

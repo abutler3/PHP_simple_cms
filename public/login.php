@@ -2,40 +2,32 @@
 <?php require_once("../includes/functions.php"); ?>
 <?php require_once("../includes/db_connection.php"); ?>
 <?php require_once("../includes/validation_functions.php"); ?>
-<?php confirm_logged_in(); ?>
 <?php $layout_context = "admin" ?>
 <?php include("../includes/layouts/header.php"); ?>
 
         <div class="col-sm-9 main">
           <?php
+          $username = "";
           if (isset($_POST['submit'])) {
             // validations
             $required_fields = array("username", "password");
             validate_presences($required_fields);
 
-            $fields_with_max_lengths = array("username" => 30);
-            validate_max_lengths($fields_with_max_lengths);
-
             if (empty($errors)) {
 
-              // Perform create
-              $username = mysql_prep($_POST["username"]);
-              $hashed_password = password_encrypt($_POST["password"]);
+              // Attempt login
+              $username = $_POST["username"];
+              $password = $_POST["password"];
+              $found_admin = attempt_login($username, $password);
 
-              // 2. Perform database query
-              $query  = "INSERT INTO admins (";
-              $query .= "  username, hashed_password";
-              $query .= ") VALUES (";
-              $query .= "  '{$username}', '{$hashed_password}'";
-              $query .= ")";
-              $result = mysqli_query($conn, $query);
-
-              if ($result) {
+              if ($found_admin) {
                 // Success
-                $_SESSION["message"] = "Admin created.";
-                redirect_to("manage_content.php");
+                // Mark user as logged in
+                $_SESSION["admin_id"] = $found_admin["id"];
+                $_SESSION["username"] = $found_admin["username"];
+                redirect_to("admin.php");
               } else {
-                $_SESSION["message"] = "Admin creation failed.";
+                $_SESSION["message"] = "Username/password not found.";
                 // die("Database query failed. " . mysqli_error($connection));
               }
             }
@@ -48,20 +40,18 @@
             $_SESSION["message"] = null;
           } ?>
           <?php echo form_errors($errors); ?>
-          <h2>Create Admin</h2>
+          <h2>Login</h2>
           <div class="form-group">
-            <form role="form" method="post" action="new_admin.php">
+            <form role="form" method="post" action="login.php">
               <p>
-                Username: <input class="form-control" type="text" name="username" value="">
+                Username: <input class="form-control" type="text" name="username" value="<?php echo htmlentities($username); ?>">
               </p>
               <p>
                 Password: <input class="form-control" type="text" name="password" value="">
               </p>
-              <input class="btn btn-default" type="submit" name="submit" value="Create Admin">
+              <input class="btn btn-default" type="submit" name="submit" value="Submit">
             </form>
           </div>
-          <br>
-          <a href="manage_admins.php">Cancel</a>
         </div>
       </div>
     </div>
